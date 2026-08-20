@@ -6,17 +6,17 @@
 
 > 本仓库只发布原创补丁源码和构建脚本，不包含 Apple Music APK、Apple 资源、反编译 DEX 或通用签名密钥。使用者必须自行取得正版安装包，并遵守所在地法律和 Apple 的服务条款。本项目与 Apple Inc. 无关。
 
-## 小白快速开始
+## 快速开始（无需命令行）
 
 1. 从本项目 Release 下载 Windows 补丁器 ZIP，并完整解压。
 2. 从 [APKMirror 的 Apple Music 6.5.0 (1580) 页面](https://www.apkmirror.com/apk/apple/apple-music/apple-music-6-5-0-release/apple-music-6-5-0-android-apk-download/) 自行下载 APKM；本项目不镜像、不代下载 Apple 安装包。
 3. 双击 `Start-Patcher.cmd`，选择刚下载的 APKM，再按中文提示选择电视或车机。
 4. 等待工具自动下载、校验、合并、打补丁和本地签名。完成后会自动打开成品所在文件夹。
 
-第一次接触 APK、ADB 也没关系，逐步截图式说明见 [零基础完整教程](docs/BEGINNER_GUIDE.md)。
+完整操作步骤见 [Windows 快速操作指南](docs/QUICK_START.md)。
 想在此基础上学习如何添加自己的补丁，可继续阅读 [解包、改写、重打包原理与开发流程](docs/HOW_IT_WORKS.md)。
 
-## 当前输出配置
+## 构建配置
 
 | 构建参数 | 推荐设备 | 输出形式 |
 |---|---|---|
@@ -26,9 +26,9 @@
 | `car-arm64` | ARM64 Android 车机、比亚迪 DiLink 类设备 | ARM64、全密度、沉浸式单 APK |
 | `tv-armv7-xhdpi` | 已验证的索尼电视精简配置 | ARMv7、xhdpi 单 APK |
 
-最低 Android 11。更多说明见 [兼容性与构建配置](COMPATIBILITY.md)。目前不会为了看起来“型号很多”而复制未经验证的 Android 11/12/13/14 包；如果某一系统或厂商确实需要不同代码，会在取得日志和测试结果后新增配置。
+最低 Android 11。请选择与设备 CPU 架构和用途相符的配置，详情见 [兼容性与构建配置](COMPATIBILITY.md)。
 
-## Windows 命令行构建（进阶）
+## Windows 命令行构建（可选）
 
 准备：Windows 10/11、PowerShell 7（Windows PowerShell 5.1 也可）、约 5 GB 空闲空间，以及指定版本的 Apple Music APKM。
 
@@ -38,20 +38,29 @@ Set-ExecutionPolicy -Scope Process Bypass
 .\scripts\build.ps1 -InputApkm "D:\Downloads\AppleMusic-6.5.0.apkm" -Profile tv-arm64
 ```
 
-首次准备会从官方发布地址下载锁定版本的 Temurin JDK、Android SDK 组件、APKEditor 和 Apktool，并逐个核对 SHA-256。首次构建会在 `.local\signing` 生成你自己的签名密钥；请备份该目录。
+首次准备会从官方发布地址下载锁定版本的 Temurin JDK、Android SDK 组件、APKEditor 和 Apktool，并自动校验文件。首次构建会在 `.local\signing` 生成你自己的签名密钥；请备份该目录。
 
 输出位于 `dist`。由于签名不同，通常不能覆盖 Apple 官方版本；安装前请确认账号和离线下载可恢复，再卸载原版。
 
-## 安装示例
+## 安装
 
-电视已经开启网络 ADB 时：
+生成的是单 APK。电视允许安装未知来源应用时，可以把 APK 复制到 U 盘、电视内部存储或局域网共享目录，再用电视文件管理器打开安装，**不需要 ADB**。
+
+网络 ADB 是可选安装方式，适用于电视没有可用文件管理器、U 盘安装入口受限，或需要在电脑上查看安装错误的情况。构建向导可自动完成连接和安装；命令行示例：
 
 ```powershell
-adb connect 电视IP:5555
-adb install "dist\AppleMusic-6.5.0-1580-tv-arm64-patched.apk"
+$adb = Get-ChildItem ".\.local\toolchain\platform-tools" -Filter adb.exe -Recurse | Select-Object -First 1
+& $adb.FullName connect "电视IP:5555"
+& $adb.FullName install "dist\AppleMusic-6.5.0-1580-tv-arm64-patched.apk"
 ```
 
-车机请优先使用厂商允许的 U 盘、文件管理器或调试安装入口。本项目不会提供或绕过工程密码、安全签名、驾驶限制。驾驶时不要操作播放器。
+如果电视提示签名冲突，需先确认账号与离线下载可以恢复，再手动卸载 Apple 官方版；补丁器不会自动卸载或清除数据。
+
+车机可使用厂商允许的 U 盘、文件管理器或调试安装入口。本项目不会提供或绕过工程密码、安全签名、驾驶限制。驾驶时不要操作播放器。
+
+## SHA-256 是什么
+
+SHA-256 是下载文件的校验指纹，不是密码、激活码或账号资料。使用者不需要把它提供给项目作者，也不需要在构建向导里手动输入；向导会自动核对基础包。Release 页面提供的 SHA-256 仅用于自愿检查补丁器 ZIP 是否下载完整。
 
 ## 功能范围
 
@@ -64,7 +73,7 @@ adb install "dist\AppleMusic-6.5.0-1580-tv-arm64-patched.apk"
 
 ## 效果图
 
-所有效果图均以相同的 16:9 比例和 `960px` 展示宽度排列，一行一图；点击浏览器中的图片可查看原图。
+效果图均为 16:9、相同展示宽度，一行一图；点击图片可查看原图。
 
 ### 普通歌曲 HOME
 

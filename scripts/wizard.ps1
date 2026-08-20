@@ -84,7 +84,8 @@ Write-Host "位置：$output"
 Start-Process explorer.exe -ArgumentList "/select,`"$output`""
 
 if ($profile.StartsWith('tv-')) {
-    $install = Read-Choice '是否现在通过网络 ADB 安装到电视？输入 Y 或 N' @('Y','N')
+    Write-Host '也可以把生成的 APK 复制到 U 盘或电视存储，用电视文件管理器安装；这种方式不需要 ADB。'
+    $install = Read-Choice '是否改用网络 ADB 立即安装？输入 Y；准备自行复制安装请输入 N' @('Y','N')
     if ($install -eq 'Y') {
         & (Join-Path $PSScriptRoot 'install-tv.ps1') -Apk $output
     }

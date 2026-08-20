@@ -8,9 +8,14 @@ $Path = [IO.Path]::GetFullPath($Path)
 
 $gitDirectory = Join-Path $Path '.git'
 if (Test-Path -LiteralPath $gitDirectory) {
-    $relativeFiles = & git -C $Path ls-files
+    $relativeFiles = & git -C $Path ls-files --cached --others --exclude-standard
     if ($LASTEXITCODE -ne 0) { throw 'git ls-files 失败。' }
-    $files = $relativeFiles | ForEach-Object { Get-Item -LiteralPath (Join-Path $Path $_) }
+    $files = $relativeFiles | ForEach-Object {
+        $candidate = Join-Path $Path $_
+        if (Test-Path -LiteralPath $candidate -PathType Leaf) {
+            Get-Item -LiteralPath $candidate
+        }
+    }
 } else {
     $files = Get-ChildItem -LiteralPath $Path -Recurse -File -Force | Where-Object {
         $_.FullName -notmatch '[\\/](?:\.local|build|dist|tools|\.git)[\\/]'
