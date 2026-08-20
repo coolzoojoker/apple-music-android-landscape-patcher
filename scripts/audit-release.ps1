@@ -1,4 +1,4 @@
-param([string]$Path)
+﻿param([string]$Path)
 
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest

@@ -6,6 +6,16 @@
 
 > 本仓库只发布原创补丁源码和构建脚本，不包含 Apple Music APK、Apple 资源、反编译 DEX 或通用签名密钥。使用者必须自行取得正版安装包，并遵守所在地法律和 Apple 的服务条款。本项目与 Apple Inc. 无关。
 
+## 小白快速开始
+
+1. 从本项目 Release 下载 Windows 补丁器 ZIP，并完整解压。
+2. 从 [APKMirror 的 Apple Music 6.5.0 (1580) 页面](https://www.apkmirror.com/apk/apple/apple-music/apple-music-6-5-0-release/apple-music-6-5-0-android-apk-download/) 自行下载 APKM；本项目不镜像、不代下载 Apple 安装包。
+3. 双击 `Start-Patcher.cmd`，选择刚下载的 APKM，再按中文提示选择电视或车机。
+4. 等待工具自动下载、校验、合并、打补丁和本地签名。完成后会自动打开成品所在文件夹。
+
+第一次接触 APK、ADB 也没关系，逐步截图式说明见 [零基础完整教程](docs/BEGINNER_GUIDE.md)。
+想在此基础上学习如何添加自己的补丁，可继续阅读 [解包、改写、重打包原理与开发流程](docs/HOW_IT_WORKS.md)。
+
 ## 当前输出配置
 
 | 构建参数 | 推荐设备 | 输出形式 |
@@ -18,7 +28,7 @@
 
 最低 Android 11。更多说明见 [兼容性与构建配置](COMPATIBILITY.md)。目前不会为了看起来“型号很多”而复制未经验证的 Android 11/12/13/14 包；如果某一系统或厂商确实需要不同代码，会在取得日志和测试结果后新增配置。
 
-## Windows 一键构建
+## Windows 命令行构建（进阶）
 
 准备：Windows 10/11、PowerShell 7（Windows PowerShell 5.1 也可）、约 5 GB 空闲空间，以及指定版本的 Apple Music APKM。
 
@@ -54,19 +64,27 @@ adb install "dist\AppleMusic-6.5.0-1580-tv-arm64-patched.apk"
 
 ## 效果图
 
-### 普通歌曲
+所有效果图均以相同的 16:9 比例和 `960px` 展示宽度排列，一行一图；点击浏览器中的图片可查看原图。
 
-| HOME | 歌词 |
-|---|---|
-| ![普通歌曲 HOME](docs/screenshots/ordinary-home.png) | ![歌词页](docs/screenshots/ordinary-lyrics.png) |
+### 普通歌曲 HOME
 
-![普通歌曲待播页](docs/screenshots/ordinary-queue.png)
+<p align="center"><img src="docs/screenshots/ordinary-home.png" alt="普通歌曲 HOME" width="960"></p>
 
-### 视频歌曲
+### 普通歌曲歌词
 
-| HOME | 待播 |
-|---|---|
-| ![视频歌曲 HOME](docs/screenshots/video-home.png) | ![视频歌曲待播页](docs/screenshots/video-queue.png) |
+<p align="center"><img src="docs/screenshots/ordinary-lyrics.png" alt="普通歌曲歌词页" width="960"></p>
+
+### 普通歌曲待播
+
+<p align="center"><img src="docs/screenshots/ordinary-queue.png" alt="普通歌曲待播页" width="960"></p>
+
+### 视频歌曲 HOME
+
+<p align="center"><img src="docs/screenshots/video-home.png" alt="视频歌曲 HOME" width="960"></p>
+
+### 视频歌曲待播
+
+<p align="center"><img src="docs/screenshots/video-queue.png" alt="视频歌曲待播页" width="960"></p>
 
 ## 已知不足
 
@@ -74,13 +92,7 @@ adb install "dist\AppleMusic-6.5.0-1580-tv-arm64-patched.apk"
 
 ## 自愿支持
 
-项目保持免费。赞赏完全自愿，不解锁功能、不提供修改版 APK，也不构成 Apple Music 服务或内容的销售。扫码前请自行核对收款方。
-
-| 支付宝 | 微信支付 |
-|---|---|
-| <a href="docs/support/alipay.jpg"><img src="docs/support/alipay.jpg" alt="支付宝收款码" width="320"></a> | <a href="docs/support/wechat.jpg"><img src="docs/support/wechat.jpg" alt="微信支付收款码" width="320"></a> |
-
-更多说明见 [自愿支持](SUPPORT.md)。
+项目保持免费；赞赏不解锁功能，也不影响问题反馈和更新。愿意支持维护的话，可查看 [自愿支持方式](SUPPORT.md)。
 
 ## 开发与发布安全
 

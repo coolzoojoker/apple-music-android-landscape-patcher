@@ -25,6 +25,11 @@
       "version": "36.1",
       "url": "https://dl.google.com/android/repository/build-tools_r36.1_windows.zip",
       "sha256": "23189D2D52B40A070A05E9CF7E497C9563F67FEE76902E8FD3135EF29EF4DBEB"
+    },
+    "androidPlatformTools": {
+      "version": "37.0.1",
+      "url": "https://dl.google.com/android/repository/platform-tools_r37.0.1-win.zip",
+      "sha256": "45F4D63113E895EBDE0C90F194099A4676B6AC653BD28D54314A9E022BBC1A99"
     }
   }
 }

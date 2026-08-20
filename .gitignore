@@ -1,6 +1,7 @@
 .local/
 build/
 dist/
+release/
 *.apk
 *.apkm
 *.apks

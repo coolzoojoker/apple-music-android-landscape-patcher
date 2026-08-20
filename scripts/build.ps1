@@ -1,4 +1,4 @@
-param(
+﻿param(
     [Parameter(Mandatory = $true)]
     [string]$InputApkm,
 
@@ -182,8 +182,9 @@ try {
     $passwordFile = Join-Path $signingDirectory 'password.txt'
     if (-not (Test-Path -LiteralPath $keystore)) {
         $random = [byte[]]::new(24)
-        [Security.Cryptography.RandomNumberGenerator]::Fill($random)
-        $password = [Convert]::ToHexString($random)
+        $rng = [Security.Cryptography.RandomNumberGenerator]::Create()
+        try { $rng.GetBytes($random) } finally { $rng.Dispose() }
+        $password = ([BitConverter]::ToString($random)).Replace('-', '')
         [IO.File]::WriteAllText($passwordFile, $password, [Text.UTF8Encoding]::new($false))
         Run $keytool.FullName @('-genkeypair','-keystore',$keystore,'-storepass',$password,
             '-keypass',$password,'-alias','applemusic-local','-keyalg','RSA','-keysize','4096',

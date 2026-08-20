@@ -1,4 +1,4 @@
-param([switch]$Force)
+﻿param([switch]$Force)
 
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
@@ -29,7 +29,8 @@ Get-LockedFile $lock.tools.apktool 'Apktool' (Join-Path $tools 'apktool.jar')
 $archives = @(
     @{ Item = $lock.tools.temurinJdk; Name = 'Temurin JDK'; File = 'temurin-jdk.zip'; Folder = 'jdk' },
     @{ Item = $lock.tools.androidPlatform; Name = 'Android Platform 35'; File = 'platform-35.zip'; Folder = 'platform' },
-    @{ Item = $lock.tools.androidBuildTools; Name = 'Android Build Tools 36.1'; File = 'build-tools.zip'; Folder = 'build-tools' }
+    @{ Item = $lock.tools.androidBuildTools; Name = 'Android Build Tools 36.1'; File = 'build-tools.zip'; Folder = 'build-tools' },
+    @{ Item = $lock.tools.androidPlatformTools; Name = 'Android Platform Tools 37.0.1'; File = 'platform-tools.zip'; Folder = 'platform-tools' }
 )
 foreach ($archive in $archives) {
     $zip = Join-Path $downloads $archive.File
@@ -52,8 +53,9 @@ foreach ($archive in $archives) {
 $javac = Get-ChildItem (Join-Path $toolchain 'jdk') -Filter javac.exe -Recurse | Select-Object -First 1
 $androidJar = Get-ChildItem (Join-Path $toolchain 'platform') -Filter android.jar -Recurse | Select-Object -First 1
 $apksigner = Get-ChildItem (Join-Path $toolchain 'build-tools') -Filter apksigner.bat -Recurse | Select-Object -First 1
-if (-not $javac -or -not $androidJar -or -not $apksigner) {
-    throw '工具链解压后缺少 javac、android.jar 或 apksigner。'
+$adb = Get-ChildItem (Join-Path $toolchain 'platform-tools') -Filter adb.exe -Recurse | Select-Object -First 1
+if (-not $javac -or -not $androidJar -or -not $apksigner -or -not $adb) {
+    throw '工具链解压后缺少 javac、android.jar、apksigner 或 adb。'
 }
 
 Write-Host ''
@@ -61,3 +63,4 @@ Write-Host '工具链准备完成：'
 Write-Host "  JDK: $($javac.Directory.Parent.FullName)"
 Write-Host "  Android API: $($androidJar.FullName)"
 Write-Host "  Build Tools: $($apksigner.Directory.FullName)"
+Write-Host "  ADB: $($adb.FullName)"
