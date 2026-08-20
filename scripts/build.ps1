@@ -2,7 +2,7 @@ param(
     [Parameter(Mandatory = $true)]
     [string]$InputApkm,
 
-    [ValidateSet('tv-armv7', 'tv-arm64', 'car-arm64', 'tv-armv7-xhdpi')]
+    [ValidateSet('tv-armv7', 'tv-arm64', 'car-armv7', 'car-arm64', 'tv-armv7-xhdpi')]
     [string]$Profile = 'tv-armv7',
 
     [string]$OutputDirectory,
@@ -134,7 +134,7 @@ try {
     $moduleDirectory = Join-Path $workRoot 'modules'
     New-Item -ItemType Directory -Path $moduleDirectory | Out-Null
 
-    $abi = if ($Profile -eq 'tv-armv7' -or $Profile -eq 'tv-armv7-xhdpi') { 'armeabi_v7a' } else { 'arm64_v8a' }
+    $abi = if ($Profile -in @('tv-armv7','car-armv7','tv-armv7-xhdpi')) { 'armeabi_v7a' } else { 'arm64_v8a' }
     $modules = @('base.apk', "split_config.$abi.apk")
     if ($Profile -eq 'tv-armv7-xhdpi') {
         $modules += 'split_config.xhdpi.apk'
@@ -156,7 +156,7 @@ try {
     $classes = Join-Path $workRoot 'classes'
     New-Item -ItemType Directory -Path $classes | Out-Null
     $sources = @((Join-Path $root 'src\tv\com\apple\android\music\player\fragment\TVLyricsLayout.java'))
-    if ($Profile -eq 'car-arm64') {
+    if ($Profile -in @('car-armv7','car-arm64')) {
         $sources += (Join-Path $root 'src\car\com\apple\android\music\car\CarWindowProvider.java')
     }
     Run $javac.FullName (@('-encoding','UTF-8','-source','8','-target','8','-classpath',$androidJar.FullName,'-d',$classes) + $sources)
@@ -170,7 +170,7 @@ try {
     Run $java.FullName @('-jar', $apktool, 'b', $decoded, '-o', $unsigned)
     Add-DexToApk $unsigned (Join-Path $dexDirectory 'classes.dex')
 
-    if ($Profile -eq 'car-arm64') {
+    if ($Profile -in @('car-armv7','car-arm64')) {
         $carUnsigned = Join-Path $workRoot 'car-unsigned.apk'
         Add-CarProvider $unsigned $carUnsigned (Join-Path $workRoot 'car-decoded') $java.FullName $apkEditor
         $unsigned = $carUnsigned

@@ -12,6 +12,7 @@
 |---|---|---|
 | `tv-armv7` | 32 位 Android TV | ARMv7、全密度单 APK |
 | `tv-arm64` | 64 位 Android TV / Google TV | ARM64、全密度单 APK |
+| `car-armv7` | 较老的 32 位 Android 车机 | ARMv7、全密度、沉浸式单 APK |
 | `car-arm64` | ARM64 Android 车机、比亚迪 DiLink 类设备 | ARM64、全密度、沉浸式单 APK |
 | `tv-armv7-xhdpi` | 已验证的索尼电视精简配置 | ARMv7、xhdpi 单 APK |
 
@@ -76,4 +77,3 @@ adb install "dist\AppleMusic-6.5.0-1580-tv-arm64-patched.apk"
 ## 许可
 
 本仓库原创代码使用 Apache-2.0；Apple Music 及第三方工具不在此许可范围内。
-
