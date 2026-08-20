@@ -5,7 +5,7 @@
 
 # Apple Music Android 横屏补丁器
 
-面向 Android TV 和可安装第三方 APK 的 Android 车机，在用户电脑本地把 **Apple Music 6.5.0 (1580)** 重建为更适合横屏的版本。
+面向 Android TV、横屏 Android 平板和可安装第三方 APK 的 Android 车机，在用户电脑本地把 **Apple Music 6.5.0 (1580)** 重建为更适合横屏的版本。
 
 它解决有线网络被误判为离线的问题，并加入横屏 HOME、歌词、待播、视频歌曲布局与触摸下滑收起；车机配置另带沉浸式系统栏处理。
 
@@ -31,13 +31,15 @@
 
 | 构建参数 | 推荐设备 | 输出形式 |
 |---|---|---|
-| `tv-armv7` | 32 位 Android TV | ARMv7、全密度单 APK |
-| `tv-arm64` | 64 位 Android TV / Google TV | ARM64、全密度单 APK |
+| `tv-armv7` | 32 位 Android TV / Android 平板 | ARMv7、全密度单 APK |
+| `tv-arm64` | 64 位 Android TV / Google TV / Android 平板 | ARM64、全密度单 APK |
 | `car-armv7` | 较老的 32 位 Android 车机 | ARMv7、全密度、沉浸式单 APK |
 | `car-arm64` | ARM64 Android 车机、比亚迪 DiLink 类设备 | ARM64、全密度、沉浸式单 APK |
 | `tv-armv7-xhdpi` | 已验证的索尼电视精简配置 | ARMv7、xhdpi 单 APK |
 
 最低 Android 11。请选择与设备 CPU 架构和用途相符的配置，详情见 [兼容性与构建配置](COMPATIBILITY.md)。
+
+Android 平板使用与 CPU 架构相符的 TV 配置即可，不需要车机的系统栏处理。平板属于实验性适配范围，目前尚未按具体型号完成验证。
 
 ## Windows 命令行构建（可选）
 

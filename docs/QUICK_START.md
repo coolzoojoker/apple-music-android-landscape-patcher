@@ -6,7 +6,7 @@
 
 - Windows 10 或 Windows 11 的 64 位电脑。
 - 至少 5 GB 可用空间和稳定网络。
-- Android 11 或更高版本的电视 / 车机，并且设备允许安装第三方 APK。
+- Android 11 或更高版本的电视 / 平板 / 车机，并且设备允许安装第三方 APK。
 - 电视端使用 USB / 蓝牙鼠标、空中鼠标，或能够模拟屏幕指针的遥控器；普通方向键遥控器尚未完整适配。
 - 你自己的 Apple Music 账号和订阅（补丁不会提供或绕过服务资格）。
 - 指定的 Apple Music 6.5.0 (1580) APKM。
@@ -46,13 +46,15 @@ APKMirror 是第三方网站，与本项目无隶属关系。你也可以从其�
 4. 按屏幕说明选择一种设备配置：
 
    - `1`：索尼 K-85XR70 或已经验证的类似 32 位 xhdpi 电视。
-   - `2`：普通 64 位 Android TV / Google TV。
-   - `3`：普通 32 位 Android TV。
+   - `2`：普通 64 位 Android TV / Google TV / Android 平板。
+   - `3`：普通 32 位 Android TV / Android 平板。
    - `4`：多数较新的 64 位 Android 车机。
    - `5`：较老的 32 位 Android 车机。
 
 5. 保持窗口开启。第一次会自动下载并校验 APKEditor、Apktool、Temurin JDK、Android SDK 和可选安装工具 ADB。
 6. 显示“构建完成”后，资源管理器会自动选中生成的 APK。
+
+横屏 Android 平板选择与 CPU 架构相符的 TV 配置即可；平板适配目前尚未按具体型号完成验证。
 
 如果 Windows 阻止脚本运行，请确认 ZIP 来自本项目 Release，并在 ZIP 的“属性”里勾选“解除锁定”后重新解压。不要关闭杀毒软件，也不要使用管理员权限运行；正常构建不需要管理员权限。
 

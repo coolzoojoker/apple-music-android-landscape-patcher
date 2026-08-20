@@ -5,7 +5,7 @@
 
 # Apple Music Android Landscape Patcher
 
-A local patching toolkit that rebuilds **Apple Music 6.5.0 (1580)** into a landscape-oriented version for Android TV devices and Android-based in-vehicle systems that permit third-party APK installation.
+A local patching toolkit that rebuilds **Apple Music 6.5.0 (1580)** into a landscape-oriented version for Android TV devices, landscape Android tablets, and Android-based in-vehicle systems that permit third-party APK installation.
 
 It fixes wired Ethernet being incorrectly treated as offline and adds landscape HOME, lyrics, queue, and music-video layouts with a touch-friendly swipe-down gesture. The in-vehicle profiles also include immersive system-bar handling.
 
@@ -45,13 +45,15 @@ APKMirror is a third-party site and is not affiliated with this project. An iden
 
 | Profile | Recommended devices | Output |
 |---|---|---|
-| `tv-armv7` | 32-bit Android TV devices | ARMv7, all-density single APK |
-| `tv-arm64` | 64-bit Android TV / Google TV devices | ARM64, all-density single APK |
+| `tv-armv7` | 32-bit Android TV devices / tablets | ARMv7, all-density single APK |
+| `tv-arm64` | 64-bit Android TV / Google TV devices / tablets | ARM64, all-density single APK |
 | `car-armv7` | Older 32-bit Android in-vehicle systems | ARMv7, all-density immersive single APK |
 | `car-arm64` | ARM64 in-vehicle systems, including compatible DiLink-class devices | ARM64, all-density immersive single APK |
 | `tv-armv7-xhdpi` | Verified Sony TV configuration | ARMv7, xhdpi single APK |
 
 The minimum supported OS is Android 11. Profiles are separated by CPU architecture and intended use, not by individual Android release.
+
+Android tablets can use the TV profile matching their CPU architecture; they do not need the in-vehicle system-bar handling. Tablet support is experimental and has not yet been verified model by model.
 
 Verified devices:
 

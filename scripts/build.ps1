@@ -46,11 +46,17 @@ function Run([string]$Program, [string[]]$Arguments) {
 }
 
 function Add-DexToApk([string]$Apk, [string]$Dex) {
-    $stream = [IO.File]::Open($Apk, [IO.FileMode]::Open, [IO.FileAccess]::ReadWrite)
+    # ZipArchive Update mode can leave an APK's local ZIP headers inconsistent
+    # with its central directory. Android's package parser on the verified test
+    # devices tolerates that, but aapt2 and stricter installers reject the
+    # manifest entry. Rebuild the archive in Create mode so every header is
+    # emitted from the same source of truth before zipalign runs.
+    $temporary = "$Apk.dex-injecting"
+    $inputStream = [IO.File]::OpenRead($Apk)
     try {
-        $zip = [IO.Compression.ZipArchive]::new($stream, [IO.Compression.ZipArchiveMode]::Update, $false)
+        $inputZip = [IO.Compression.ZipArchive]::new($inputStream, [IO.Compression.ZipArchiveMode]::Read, $false)
         try {
-            $numbers = foreach ($entry in $zip.Entries) {
+            $numbers = foreach ($entry in $inputZip.Entries) {
                 if ($entry.FullName -match '^classes(?<n>\d*)\.dex$') {
                     if ($Matches.n) { [int]$Matches.n } else { 1 }
                 }
@@ -58,17 +64,49 @@ function Add-DexToApk([string]$Apk, [string]$Dex) {
             $next = (($numbers | Measure-Object -Maximum).Maximum + 1)
             if (-not $next) { $next = 1 }
             $entryName = if ($next -eq 1) { 'classes.dex' } else { "classes$next.dex" }
-            if ($zip.GetEntry($entryName)) { throw "DEX 入口已存在：$entryName" }
-            [IO.Compression.ZipFileExtensions]::CreateEntryFromFile(
-                $zip, $Dex, $entryName, [IO.Compression.CompressionLevel]::Optimal
-            ) | Out-Null
-            Write-Host "已注入 $entryName"
+            if ($inputZip.GetEntry($entryName)) { throw "DEX 入口已存在：$entryName" }
+
+            $outputStream = [IO.File]::Open($temporary, [IO.FileMode]::Create,
+                [IO.FileAccess]::ReadWrite, [IO.FileShare]::None)
+            try {
+                $outputZip = [IO.Compression.ZipArchive]::new(
+                    $outputStream, [IO.Compression.ZipArchiveMode]::Create, $false
+                )
+                try {
+                    foreach ($sourceEntry in $inputZip.Entries) {
+                        $compression = if ($sourceEntry.Length -eq $sourceEntry.CompressedLength) {
+                            [IO.Compression.CompressionLevel]::NoCompression
+                        } else {
+                            [IO.Compression.CompressionLevel]::Optimal
+                        }
+                        $targetEntry = $outputZip.CreateEntry($sourceEntry.FullName, $compression)
+                        $targetEntry.LastWriteTime = $sourceEntry.LastWriteTime
+                        if ($sourceEntry.Length -gt 0) {
+                            $source = $sourceEntry.Open()
+                            $target = $targetEntry.Open()
+                            try { $source.CopyTo($target) } finally {
+                                $target.Dispose()
+                                $source.Dispose()
+                            }
+                        }
+                    }
+                    [IO.Compression.ZipFileExtensions]::CreateEntryFromFile(
+                        $outputZip, $Dex, $entryName, [IO.Compression.CompressionLevel]::Optimal
+                    ) | Out-Null
+                } finally {
+                    $outputZip.Dispose()
+                }
+            } finally {
+                $outputStream.Dispose()
+            }
         } finally {
-            $zip.Dispose()
+            $inputZip.Dispose()
         }
     } finally {
-        $stream.Dispose()
+        $inputStream.Dispose()
     }
+    Move-Item -LiteralPath $temporary -Destination $Apk -Force
+    Write-Host "已注入 $entryName，并重建一致的 ZIP 目录"
 }
 
 function Add-CarProvider([string]$InputApk, [string]$OutputApk, [string]$DecodeDirectory,
@@ -115,9 +153,10 @@ $jar = Get-ChildItem (Join-Path $local 'toolchain\jdk') -Filter jar.exe -Recurse
 $keytool = Get-ChildItem (Join-Path $local 'toolchain\jdk') -Filter keytool.exe -Recurse | Select-Object -First 1
 $androidJar = Get-ChildItem (Join-Path $local 'toolchain\platform') -Filter android.jar -Recurse | Select-Object -First 1
 $d8 = Get-ChildItem (Join-Path $local 'toolchain\build-tools') -Filter d8.bat -Recurse | Select-Object -First 1
+$aapt2 = Get-ChildItem (Join-Path $local 'toolchain\build-tools') -Filter aapt2.exe -Recurse | Select-Object -First 1
 $zipalign = Get-ChildItem (Join-Path $local 'toolchain\build-tools') -Filter zipalign.exe -Recurse | Select-Object -First 1
 $apksigner = Get-ChildItem (Join-Path $local 'toolchain\build-tools') -Filter apksigner.bat -Recurse | Select-Object -First 1
-foreach ($item in @($javac,$java,$jar,$keytool,$androidJar,$d8,$zipalign,$apksigner)) {
+foreach ($item in @($javac,$java,$jar,$keytool,$androidJar,$d8,$aapt2,$zipalign,$apksigner)) {
     if (-not $item) { throw '本地工具链不完整，请重新运行 scripts\setup-toolchain.ps1 -Force。' }
 }
 $env:JAVA_HOME = $java.Directory.Parent.FullName
@@ -200,6 +239,11 @@ try {
     Run $apksigner.FullName @('sign','--ks',$keystore,'--ks-key-alias','applemusic-local',
         '--ks-pass',"pass:$password",'--key-pass',"pass:$password",'--out',$output,$aligned)
     Run $apksigner.FullName @('verify','--verbose','--print-certs',$output)
+    Run $zipalign.FullName @('-c','4',$output)
+    Write-Host ('> ' + $aapt2.FullName + ' dump badging ' + $output)
+    & $aapt2.FullName dump badging $output | Out-Null
+    if ($LASTEXITCODE -ne 0) { throw 'APK 清单或 ZIP 目录结构校验失败。' }
+    Write-Host 'APK 清单、签名与 ZIP 对齐校验通过。'
 
     $hash = (Get-FileHash -LiteralPath $output -Algorithm SHA256).Hash
     Write-Host ''

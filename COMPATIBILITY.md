@@ -4,8 +4,8 @@
 
 | 配置 | CPU / 密度 | 用途 | 验证状态 |
 |---|---|---|---|
-| `tv-armv7` | armeabi-v7a / 全密度 | 32 位 Android TV、部分电视 SoC | 索尼 K-85XR70 已验证 |
-| `tv-arm64` | arm64-v8a / 全密度 | 主流 64 位 Android TV / Google TV | 未验证 |
+| `tv-armv7` | armeabi-v7a / 全密度 | 32 位 Android TV、32 位 Android 平板 | 索尼 K-85XR70 已验证；平板未验证 |
+| `tv-arm64` | arm64-v8a / 全密度 | 64 位 Android TV / Google TV / Android 平板 | 未验证 |
 | `car-armv7` | armeabi-v7a / 全密度 | 较老且允许安装第三方 APK 的 32 位车机 | 未验证 |
 | `car-arm64` | arm64-v8a / 全密度 | 可安装第三方 APK 的 ARM64 车机，附沉浸式系统栏处理 | 用户车机已验证基础功能；其他车型未验证 |
 | `tv-armv7-xhdpi` | armeabi-v7a / xhdpi | 索尼测试机的精简包 | 索尼 K-85XR70 已验证 |
@@ -15,6 +15,8 @@
 ## 输入设备
 
 当前横屏界面以触控和鼠标指针为主要输入方式。电视建议使用 USB / 蓝牙鼠标、空中鼠标或其他指针型遥控器。普通方向键遥控器的焦点导航尚未完整适配，部分按钮和滚动列表不能保证仅靠方向键与确认键操作。
+
+横屏 Android 平板可使用与 CPU 架构相符的 TV 配置，直接用触控操作；无需选择带系统栏处理的车机配置。平板适配尚未按具体型号进行真机验证。
 
 ## Android 版本说明
 
