@@ -27,7 +27,7 @@ Get-FileHash ".\AppleMusic-Landscape-Patcher-Windows-*.zip" -Algorithm SHA256
 
 ## 第二步：自行取得基础包
 
-当前只支持下面这个精确版本：
+支持的基础包如下：
 
 - 来源页面：[APKMirror — Apple Music 6.5.0 (1580)](https://www.apkmirror.com/apk/apple/apple-music/apple-music-6-5-0-release/apple-music-6-5-0-android-apk-download/)
 - 文件类型：APK Bundle / APKM，不是单独的 base APK。
@@ -85,9 +85,9 @@ APKMirror 是第三方网站，与本项目无隶属关系。你也可以从其�
 3. 如果车机禁止第三方安装、要求系统签名或工程密码，请停止；本项目不提供绕过方法。
 4. 驾驶时不要安装、调试或操作播放器。
 
-## 更新时一定要备份的文件
+## 签名密钥备份
 
-第一次构建会在 `.local\signing` 生成只属于你的签名密钥。请完整备份这个文件夹。以后使用同一密钥构建，才有机会直接覆盖你之前构建的版本；丢失密钥后通常只能卸载再装。
+第一次构建会在 `.local\signing` 生成只属于你的签名密钥。请完整备份这个文件夹。同一密钥签名的版本可以相互覆盖；丢失密钥后通常只能卸载再装。
 
 不要把 `.local\signing`、生成的 APK、ADB 地址、设备序列号或包含账号信息的日志上传到 Issue。
 
