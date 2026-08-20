@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "targets": [
+    {
+      "name": "Apple Music 6.5.0 (1580) APKMirror APKM",
+      "versionName": "6.5.0",
+      "versionCode": 1580,
+      "minSdk": 30,
+      "sha256": "18F1B7A0296FBF059D68509506729D6A291408BE43E3CE50060E15E5E8B2941A"
+    }
+  ]
+}
+

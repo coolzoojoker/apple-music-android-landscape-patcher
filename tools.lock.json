@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "tools": {
+    "apkeditor": {
+      "version": "1.4.9",
+      "url": "https://github.com/REAndroid/APKEditor/releases/download/V1.4.9/APKEditor-1.4.9.jar",
+      "sha256": "A9CD40DF818845456BE6D696DE6110C89EDF4B0A0580CB83438ED6B25A366E67"
+    },
+    "apktool": {
+      "version": "3.0.2",
+      "url": "https://github.com/iBotPeaches/Apktool/releases/download/v3.0.2/apktool_3.0.2.jar",
+      "sha256": "EEE4669A704A14E0623407E6701B0B91887E61E1E4049CB7A82833E14AE8B5FD"
+    },
+    "temurinJdk": {
+      "version": "21.0.11+10",
+      "url": "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.11%2B10/OpenJDK21U-jdk_x64_windows_hotspot_21.0.11_10.zip",
+      "sha256": "D3625E7CADF23787EA540229544B6E2AB494B3B54DA1801879E583E1DFEE0A64"
+    },
+    "androidPlatform": {
+      "version": "35-r02",
+      "url": "https://dl.google.com/android/repository/platform-35_r02.zip",
+      "sha256": "0988CACAD01B38A18A47BAC14A0695F246BC76C1B06C0EEB8EB0DC825AB0C8E0"
+    },
+    "androidBuildTools": {
+      "version": "36.1",
+      "url": "https://dl.google.com/android/repository/build-tools_r36.1_windows.zip",
+      "sha256": "23189D2D52B40A070A05E9CF7E497C9563F67FEE76902E8FD3135EF29EF4DBEB"
+    }
+  }
+}
