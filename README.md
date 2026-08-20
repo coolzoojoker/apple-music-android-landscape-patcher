@@ -54,7 +54,19 @@ adb install "dist\AppleMusic-6.5.0-1580-tv-arm64-patched.apk"
 
 ## 效果图
 
-效果图将在隐私检查与画面确认后加入：普通歌曲 HOME、歌词、待播，视频歌曲 HOME、视频待播。
+### 普通歌曲
+
+| HOME | 歌词 |
+|---|---|
+| ![普通歌曲 HOME](docs/screenshots/ordinary-home.png) | ![歌词页](docs/screenshots/ordinary-lyrics.png) |
+
+![普通歌曲待播页](docs/screenshots/ordinary-queue.png)
+
+### 视频歌曲
+
+| HOME | 待播 |
+|---|---|
+| ![视频歌曲 HOME](docs/screenshots/video-home.png) | ![视频歌曲待播页](docs/screenshots/video-queue.png) |
 
 ## 已知不足
 
@@ -62,7 +74,13 @@ adb install "dist\AppleMusic-6.5.0-1580-tv-arm64-patched.apk"
 
 ## 自愿支持
 
-项目保持免费。赞赏入口会放在 README 末尾和 [SUPPORT.md](SUPPORT.md)，不解锁功能、不提供修改版 APK。公开收款码前请只提供专用二维码原图，不要附付款记录、手机号或实名资料。
+项目保持免费。赞赏完全自愿，不解锁功能、不提供修改版 APK，也不构成 Apple Music 服务或内容的销售。扫码前请自行核对收款方。
+
+| 支付宝 | 微信支付 |
+|---|---|
+| <img src="docs/support/alipay.jpg" alt="支付宝收款码" width="320"> | <img src="docs/support/wechat.jpg" alt="微信支付收款码" width="320"> |
+
+更多说明见 [自愿支持](SUPPORT.md)。
 
 ## 开发与发布安全
 

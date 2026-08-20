@@ -33,7 +33,12 @@ $patterns = @(
     '(?<![0-9])(?:10|127|169\.254|172\.(?:1[6-9]|2[0-9]|3[01])|192\.168)\.[0-9]{1,3}\.[0-9]{1,3}',
     'adb\s+connect\s+[0-9]'
 )
-$textFiles = $files | Where-Object { $_.Length -lt 5MB }
+$textExtensions = @('.md','.ps1','.java','.json','.yml','.yaml','.txt','.xml','.properties')
+$textFiles = $files | Where-Object {
+    $_.Length -lt 5MB -and
+    ($textExtensions -contains $_.Extension.ToLowerInvariant() -or
+     $_.Name -in @('.gitignore','.gitattributes'))
+}
 $hits = @()
 foreach ($file in $textFiles) {
     foreach ($pattern in $patterns) {

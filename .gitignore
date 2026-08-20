@@ -15,6 +15,3 @@ dist/
 *.key
 *.log
 tools/
-docs/screenshots/*
-!docs/screenshots/.gitkeep
-
