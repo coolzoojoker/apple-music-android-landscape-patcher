@@ -4,13 +4,15 @@
 
 | 配置 | CPU / 密度 | 用途 | 验证状态 |
 |---|---|---|---|
-| `tv-armv7` | armeabi-v7a / 全密度 | 32 位 Android TV、32 位 Android 平板 | 索尼 K-85XR70 已验证；平板未验证 |
+| `tv-armv7` | armeabi-v7a / 全密度 | 32 位 Android TV、32 位 Android 平板 | Android 12 ARMv7 电视已验证；平板未验证 |
 | `tv-arm64` | arm64-v8a / 全密度 | 64 位 Android TV / Google TV / Android 平板 | 未验证 |
 | `car-armv7` | armeabi-v7a / 全密度 | 较老且允许安装第三方 APK 的 32 位车机 | 未验证 |
-| `car-arm64` | arm64-v8a / 全密度 | 可安装第三方 APK 的 ARM64 车机，附沉浸式系统栏处理 | 用户车机已验证基础功能；其他车型未验证 |
-| `tv-armv7-xhdpi` | armeabi-v7a / xhdpi | 索尼测试机的精简包 | 索尼 K-85XR70 已验证 |
+| `car-arm64` | arm64-v8a / 全密度 | 可安装第三方 APK 的 ARM64 车机，附沉浸式系统栏处理 | 一台 ARM64 Android 车机已验证基础功能；其他系统未验证 |
+| `tv-armv7-xhdpi` | armeabi-v7a / xhdpi | 已确认使用 xhdpi 的 32 位 Android TV 精简包 | Android 12 ARMv7/xhdpi 电视已验证 |
 
 “全密度”包含多个 DPI 资源，以适配不同厂商的 `densityDpi` 设置，不代表每个分辨率均经过逐像素验证。电视实际输出 4K 时，应用窗口也可能由系统按 1920×1080 逻辑分辨率渲染再缩放，这是 Android TV 常见行为。
+
+无法确认设备屏幕密度时应优先使用全密度配置。`tv-armv7-xhdpi` 只是体积更小的技术配置，不对应特定品牌或型号；仅在设备报告 `densityDpi=320` / xhdpi 时选择。
 
 ## 输入设备
 
@@ -24,4 +26,4 @@
 
 ## 车机范围
 
-车机包面向类似比亚迪 DiLink、允许安装第三方 APK 的 ARM64 Android 车机。厂商密码、安装入口、驾驶安全限制、系统签名要求可能因车型和固件而异；补丁不会绕过车机安全策略。驾驶时请勿操作播放器界面。
+车机包面向允许安装第三方 APK 的 Android 车机。厂商密码、安装入口、驾驶安全限制、系统签名要求可能因车型和固件而异；补丁不会绕过车机安全策略。驾驶时请勿操作播放器界面。

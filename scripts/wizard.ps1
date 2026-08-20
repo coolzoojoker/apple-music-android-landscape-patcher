@@ -57,10 +57,10 @@ if ($actualHash -ne $expectedHash) {
 Write-Host '基础包版本和哈希正确。' -ForegroundColor Green
 Write-Host ''
 Write-Host '请选择设备：'
-Write-Host '  1. 索尼 K-85XR70 / 已验证的类似电视（32 位、xhdpi）'
+Write-Host '  1. 32 位 ARMv7 电视（仅 xhdpi，体积较小；请先确认屏幕密度）'
 Write-Host '  2. 普通 64 位 Android TV / Google TV / Android 平板'
-Write-Host '  3. 普通 32 位 Android TV / Android 平板'
-Write-Host '  4. 64 位 Android 车机（多数较新的车机，含比亚迪 DiLink 类）'
+Write-Host '  3. 普通 32 位 Android TV / Android 平板（全密度，兼容范围更广）'
+Write-Host '  4. 64 位 Android 车机（多数较新的 Android 车机）'
 Write-Host '  5. 32 位 Android 车机（较老车机）'
 $selection = Read-Choice '输入 1-5' @('1','2','3','4','5')
 $profile = @{

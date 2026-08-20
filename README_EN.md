@@ -48,18 +48,20 @@ APKMirror is a third-party site and is not affiliated with this project. An iden
 | `tv-armv7` | 32-bit Android TV devices / tablets | ARMv7, all-density single APK |
 | `tv-arm64` | 64-bit Android TV / Google TV devices / tablets | ARM64, all-density single APK |
 | `car-armv7` | Older 32-bit Android in-vehicle systems | ARMv7, all-density immersive single APK |
-| `car-arm64` | ARM64 in-vehicle systems, including compatible DiLink-class devices | ARM64, all-density immersive single APK |
-| `tv-armv7-xhdpi` | Verified Sony TV configuration | ARMv7, xhdpi single APK |
+| `car-arm64` | Newer ARM64 Android-based in-vehicle systems | ARM64, all-density immersive single APK |
+| `tv-armv7-xhdpi` | 32-bit Android TV devices confirmed to use xhdpi | ARMv7, xhdpi-only compact APK |
 
 The minimum supported OS is Android 11. Profiles are separated by CPU architecture and intended use, not by individual Android release.
 
 Android tablets can use the TV profile matching their CPU architecture; they do not need the in-vehicle system-bar handling. Tablet support is experimental and has not yet been verified model by model.
 
-Verified devices:
+If the TV's display density is unknown, use the all-density `tv-armv7` or `tv-arm64` profile. `tv-armv7-xhdpi` is only for ARMv7 devices confirmed to use `densityDpi=320` / xhdpi; it is not tied to a particular brand or model.
 
-- `tv-armv7-xhdpi`: Sony K-85XR70
-- `tv-armv7`: Sony K-85XR70
-- `car-arm64`: basic functions verified on the development in-vehicle unit; other models remain unverified
+Verified configurations:
+
+- `tv-armv7-xhdpi`: Android 12 ARMv7/xhdpi TV
+- `tv-armv7`: Android 12 ARMv7 TV
+- `car-arm64`: basic functions verified on one ARM64 Android in-vehicle system; other systems remain unverified
 
 All-density profiles include multiple DPI resource sets for different manufacturer configurations. A 4K television may still render the application at a 1920×1080 logical resolution and upscale it at the system compositor level.
 

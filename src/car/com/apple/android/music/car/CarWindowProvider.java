@@ -22,8 +22,8 @@ import java.util.WeakHashMap;
 /**
  * Car-only process initializer that keeps Apple Music in immersive mode.
  *
- * The BYD/DiLink system UI can overlay third-party activities at the top of
- * the display.  Applying the policy to every activity avoids fixing individual
+ * Some in-vehicle Android system UIs can overlay third-party activities at the
+ * top of the display. Applying the policy to every activity avoids fixing individual
  * layouts or hard-coding a status-bar height for one vehicle or resolution.
  */
 public final class CarWindowProvider extends ContentProvider {

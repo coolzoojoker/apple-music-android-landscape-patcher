@@ -34,12 +34,14 @@
 | `tv-armv7` | 32 位 Android TV / Android 平板 | ARMv7、全密度单 APK |
 | `tv-arm64` | 64 位 Android TV / Google TV / Android 平板 | ARM64、全密度单 APK |
 | `car-armv7` | 较老的 32 位 Android 车机 | ARMv7、全密度、沉浸式单 APK |
-| `car-arm64` | ARM64 Android 车机、比亚迪 DiLink 类设备 | ARM64、全密度、沉浸式单 APK |
-| `tv-armv7-xhdpi` | 已验证的索尼电视精简配置 | ARMv7、xhdpi 单 APK |
+| `car-arm64` | 较新的 ARM64 Android 车机 | ARM64、全密度、沉浸式单 APK |
+| `tv-armv7-xhdpi` | 已确认使用 xhdpi 的 32 位 Android TV | ARMv7、xhdpi 精简单 APK |
 
 最低 Android 11。请选择与设备 CPU 架构和用途相符的配置，详情见 [兼容性与构建配置](COMPATIBILITY.md)。
 
 Android 平板使用与 CPU 架构相符的 TV 配置即可，不需要车机的系统栏处理。平板属于实验性适配范围，目前尚未按具体型号完成验证。
+
+不确定电视屏幕密度时，请选择全密度的 `tv-armv7` 或 `tv-arm64`；`tv-armv7-xhdpi` 只用于已经确认 `densityDpi=320` / xhdpi 的 ARMv7 设备，并非特定品牌专用包。
 
 ## Windows 命令行构建（可选）
 
