@@ -6,6 +6,6 @@
 
 | 支付宝 | 微信支付 |
 |---|---|
-| <img src="docs/support/alipay.jpg" alt="支付宝收款码" width="360"> | <img src="docs/support/wechat.jpg" alt="微信支付收款码" width="360"> |
+| <a href="docs/support/alipay.jpg"><img src="docs/support/alipay.jpg" alt="支付宝收款码" width="360"></a> | <a href="docs/support/wechat.jpg"><img src="docs/support/wechat.jpg" alt="微信支付收款码" width="360"></a> |
 
 请勿在 Issue 中发布付款记录、真实姓名、手机号或其他账户资料。如需确认赞赏，请通过付款平台自身提供的备注功能处理。

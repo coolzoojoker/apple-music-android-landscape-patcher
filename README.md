@@ -78,7 +78,7 @@ adb install "dist\AppleMusic-6.5.0-1580-tv-arm64-patched.apk"
 
 | 支付宝 | 微信支付 |
 |---|---|
-| <img src="docs/support/alipay.jpg" alt="支付宝收款码" width="320"> | <img src="docs/support/wechat.jpg" alt="微信支付收款码" width="320"> |
+| <a href="docs/support/alipay.jpg"><img src="docs/support/alipay.jpg" alt="支付宝收款码" width="320"></a> | <a href="docs/support/wechat.jpg"><img src="docs/support/wechat.jpg" alt="微信支付收款码" width="320"></a> |
 
 更多说明见 [自愿支持](SUPPORT.md)。
 
