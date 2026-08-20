@@ -11,6 +11,12 @@ It fixes wired Ethernet being incorrectly treated as offline and adds landscape 
 
 > This repository distributes only original patch source code and build scripts. It does not contain an Apple Music APK, Apple assets, decompiled DEX files, or a shared signing key. You must obtain the legitimate base package yourself and comply with applicable law and Apple's terms. This project is not affiliated with Apple Inc.
 
+## Input Methods
+
+The landscape player is currently designed primarily for touchscreens and pointer input. On a TV, use a USB/Bluetooth mouse, an air-mouse remote, or another remote that can emulate an on-screen pointer.
+
+Focus navigation with a conventional directional-pad remote is not yet fully adapted. Some controls may be unreachable or inoperable when using only the arrow and OK buttons. Tablets and in-vehicle touchscreens can be operated directly by touch.
+
 ## Quick Start — No Command Line Required
 
 1. Download the Windows patcher ZIP from this project's **Releases** page and extract the entire archive.
@@ -161,6 +167,10 @@ Run the release audit before publishing:
 ```
 
 The patcher stops on input mismatches or missing target-code anchors. A new Apple Music version must be audited and adapted explicitly; validation checks must not be bypassed. See [SECURITY.md](SECURITY.md) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+
+## Development Note
+
+The maintainer defined the requirements and interaction design and performed real-device testing on TV and in-vehicle hardware. Most of the code and documentation was written with assistance from OpenAI Codex. The project maintainer is responsible for final review, releases, and ongoing maintenance.
 
 ## License
 
