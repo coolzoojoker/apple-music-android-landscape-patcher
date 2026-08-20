@@ -1,0 +1,6 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 安全问题
+    url: https://github.com/coolzoojoker/apple-music-android-landscape-patcher/security/advisories/new
+    about: 请私下报告补丁器安全问题，不要公开粘贴敏感日志。
+
