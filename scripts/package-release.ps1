@@ -25,6 +25,7 @@ New-Item -ItemType Directory -Path $stage -Force | Out-Null
 $files = @(
     'Start-Patcher.cmd',
     'README.md',
+    'README_EN.md',
     'SUPPORT.md',
     'LICENSE',
     'SECURITY.md',

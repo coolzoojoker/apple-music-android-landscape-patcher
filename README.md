@@ -1,3 +1,8 @@
+<p align="center">
+  <a href="README.md"><strong>简体中文</strong></a> ·
+  <a href="README_EN.md"><strong>English</strong></a>
+</p>
+
 # Apple Music Android 横屏补丁器
 
 面向 Android TV 和可安装第三方 APK 的 Android 车机，在用户电脑本地把 **Apple Music 6.5.0 (1580)** 重建为更适合横屏的版本。
