@@ -24,6 +24,12 @@
 3. 双击 `Start-Patcher.cmd`，选择刚下载的 APKM，再按中文提示选择电视或车机。
 4. 等待工具自动下载、校验、合并、打补丁和本地签名。完成后会自动打开成品所在文件夹。
 
+如果双击后窗口立即关闭或文字乱码，请删除旧 ZIP，从 Release 重新下载并完整解压后再运行。不要单独转存或重新保存 `Start-Patcher.cmd`。仍无法启动时，可在解压目录打开 PowerShell，运行：
+
+```powershell
+powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File ".\scripts\wizard.ps1"
+```
+
 完整操作步骤见 [Windows 快速操作指南](docs/QUICK_START.md)。
 补丁结构与扩展方法见 [解包、改写、重打包原理与开发流程](docs/HOW_IT_WORKS.md)。
 

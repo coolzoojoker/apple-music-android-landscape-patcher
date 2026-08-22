@@ -98,6 +98,7 @@ APKMirror 是第三方网站，与本项目无隶属关系。你也可以从其�
 
 ## 常见错误
 
+- **启动窗口闪退或乱码**：删除旧 ZIP，从 Release 重新下载并完整解压；不要单独转存、编辑或重新保存 `Start-Patcher.cmd`。仍无法启动时，在解压目录打开 PowerShell，运行 `powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File ".\scripts\wizard.ps1"`。
 - **基础包校验失败**：下载的版本、变体或文件内容不对。回到第二步核对，不需要手动修改校验值。
 - **电视文件管理器无法安装**：确认已允许该文件管理器安装未知应用；仍失败时使用网络 ADB 查看具体错误。
 - **工具下载失败**：检查网络后重新运行；已经校验完成的文件会复用。

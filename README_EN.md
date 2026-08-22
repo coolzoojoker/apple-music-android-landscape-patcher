@@ -24,6 +24,12 @@ Focus navigation with a conventional directional-pad remote is not yet fully ada
 3. Double-click `Start-Patcher.cmd`, select the APKM, and choose a TV or in-vehicle profile by following the prompts.
 4. The patcher downloads and verifies its tools, merges the bundle, applies the selected patches, and signs the result locally. File Explorer opens the output folder when the build finishes.
 
+If the window closes immediately or its text is garbled, delete the old ZIP, download the current Release again, and extract the complete archive before running it. Do not redistribute or re-save `Start-Patcher.cmd` by itself. If it still does not start, open PowerShell in the extracted folder and run:
+
+```powershell
+powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File ".\scripts\wizard.ps1"
+```
+
 Requirements:
 
 - 64-bit Windows 10 or Windows 11
