@@ -17,9 +17,7 @@ if (Test-Path -LiteralPath $gitDirectory) {
         }
     }
 } else {
-    $files = Get-ChildItem -LiteralPath $Path -Recurse -File -Force | Where-Object {
-        $_.FullName -notmatch '[\\/](?:\.local|build|dist|tools|\.git)[\\/]'
-    }
+    $files = Get-ChildItem -LiteralPath $Path -Recurse -File -Force
 }
 
 $forbiddenExtensions = @('.apk','.apkm','.apks','.xapk','.aab','.dex','.jks','.keystore',
@@ -54,6 +52,19 @@ foreach ($file in $textFiles) {
 if ($hits) {
     $hits | ForEach-Object { Write-Error "$($_.Path):$($_.LineNumber): $($_.Line.Trim())" }
     throw '发现可能的密钥、密码、本机绝对路径或内网地址。'
+}
+
+$launchers = $files | Where-Object { $_.Name -eq 'Start-Patcher.cmd' }
+if (-not $launchers) { throw '缺少 Windows 启动器 Start-Patcher.cmd。' }
+foreach ($launcher in $launchers) {
+    $bytes = [IO.File]::ReadAllBytes($launcher.FullName)
+    if ($bytes | Where-Object { $_ -gt 127 } | Select-Object -First 1) {
+        throw "Windows 启动器必须只包含 ASCII 字符：$($launcher.FullName)"
+    }
+    $launcherText = [Text.Encoding]::ASCII.GetString($bytes)
+    if ($launcherText -match "(?<!`r)`n" -or $launcherText -notmatch "`r`n") {
+        throw "Windows 启动器必须使用 CRLF 换行：$($launcher.FullName)"
+    }
 }
 
 Write-Host '发布审计通过：未发现 Apple 安装包、DEX、签名密钥或常见隐私泄漏。'

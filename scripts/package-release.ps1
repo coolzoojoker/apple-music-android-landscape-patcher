@@ -47,6 +47,14 @@ foreach ($relative in $directories) {
     Copy-Item -LiteralPath $source -Destination $destination -Recurse -Force
 }
 
+# cmd.exe is sensitive to batch-file encoding and line endings on some Windows
+# configurations. Keep the public launcher ASCII-only and force CRLF in every
+# packaged archive, independent of the contributor's Git checkout settings.
+$launcher = Join-Path $stage 'Start-Patcher.cmd'
+$launcherText = [IO.File]::ReadAllText($launcher)
+$launcherText = $launcherText -replace "\r?\n", "`r`n"
+[IO.File]::WriteAllText($launcher, $launcherText, [Text.Encoding]::ASCII)
+
 & (Join-Path $PSScriptRoot 'audit-release.ps1') -Path $stage
 
 $zip = Join-Path $OutputDirectory "AppleMusic-Landscape-Patcher-Windows-$Version.zip"

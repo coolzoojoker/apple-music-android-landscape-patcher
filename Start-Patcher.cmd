@@ -1,8 +1,10 @@
 @echo off
-chcp 65001 >nul
-title Apple Music 横屏补丁器
+setlocal
+title Apple Music Landscape Patcher
 cd /d "%~dp0"
 powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File "%~dp0scripts\wizard.ps1" -InputApkm "%~1"
+set "exitCode=%ERRORLEVEL%"
 echo.
-echo 窗口即将关闭。若上方显示错误，请先截图保存。
+if not "%exitCode%"=="0" echo Patcher exited with error code %exitCode%.
 pause
+exit /b %exitCode%
