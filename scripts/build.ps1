@@ -233,13 +233,29 @@ try {
     $password = (Get-Content -LiteralPath (Require-File $passwordFile '签名密码文件缺失。') -Raw).Trim()
 
     $aligned = Join-Path $workRoot 'aligned.apk'
-    Run $zipalign.FullName @('-f','-p','4',$unsigned,$aligned)
+    Run $zipalign.FullName @('-P','16','-f','4',$unsigned,$aligned)
     $output = Join-Path $OutputDirectory "AppleMusic-6.5.0-1580-$Profile-patched.apk"
     if (Test-Path -LiteralPath $output) { Remove-Item -LiteralPath $output -Force }
-    Run $apksigner.FullName @('sign','--ks',$keystore,'--ks-key-alias','applemusic-local',
+    Run $apksigner.FullName @('sign','--min-sdk-version','21',
+        '--v1-signing-enabled','true','--v2-signing-enabled','true',
+        '--v3-signing-enabled','true','--v4-signing-enabled','false',
+        '--ks',$keystore,'--ks-key-alias','applemusic-local',
         '--ks-pass',"pass:$password",'--key-pass',"pass:$password",'--out',$output,$aligned)
-    Run $apksigner.FullName @('verify','--verbose','--print-certs',$output)
-    Run $zipalign.FullName @('-c','4',$output)
+    Write-Host ('> ' + $apksigner.FullName + ' verify --min-sdk-version 21 --verbose --print-certs ' + $output)
+    $signatureOutput = @(& $apksigner.FullName verify --min-sdk-version 21 --verbose --print-certs $output 2>&1 |
+        ForEach-Object { $_.ToString() })
+    $signatureExitCode = $LASTEXITCODE
+    $signatureOutput | ForEach-Object { Write-Host $_ }
+    if ($signatureExitCode -ne 0) { throw "APK 签名校验失败，退出码 $signatureExitCode。" }
+    $signatureText = $signatureOutput -join "`n"
+    foreach ($scheme in @('v1','v2','v3')) {
+        $expected = "Verified using $scheme scheme (JAR signing): true"
+        if ($scheme -ne 'v1') { $expected = "Verified using $scheme scheme (APK Signature Scheme $scheme): true" }
+        if (-not $signatureText.Contains($expected, [StringComparison]::Ordinal)) {
+            throw "APK 缺少必需的 $scheme 签名。"
+        }
+    }
+    Run $zipalign.FullName @('-c','-P','16','4',$output)
     Write-Host ('> ' + $aapt2.FullName + ' dump badging ' + $output)
     & $aapt2.FullName dump badging $output | Out-Null
     if ($LASTEXITCODE -ne 0) { throw 'APK 清单或 ZIP 目录结构校验失败。' }

@@ -100,6 +100,30 @@ $installHook = @"
 $baseFragment = Replace-Once $baseFragment $installAnchor $installHook 'player/install'
 Write-Utf8 $baseFragmentPath $baseFragment
 
+# Route the native lyrics/queue buttons through the landscape controller before
+# the original click handler runs. The controller only consumes modes 4 and 5;
+# every other native player action falls through unchanged.
+$modeClickPath = Get-RequiredFile 'smali_classes2\l7.1\N2.smali'
+$modeClick = Read-Utf8 $modeClickPath
+$modeClickAnchor = ".method public final a(Landroid/view/View;I)V`r`n    .locals 9`r`n`r`n    .line 1"
+$modeClickHook = @"
+.method public final a(Landroid/view/View;I)V
+    .locals 9
+
+    invoke-static {p1, p2}, Lcom/apple/android/music/player/fragment/TVLyricsLayout;->beforeNativeModeClick(Landroid/view/View;I)Z
+
+    move-result v0
+
+    if-eqz v0, :tv_mode_click_fallback
+
+    return-void
+
+    .line 1
+    :tv_mode_click_fallback
+"@ -replace "`n", "`r`n"
+$modeClick = Replace-Once $modeClick $modeClickAnchor $modeClickHook 'player/mode-click'
+Write-Utf8 $modeClickPath $modeClick
+
 # Cover the dedicated lyrics fragment lifecycle as well. Custom labels avoid
 # renumbering or touching the app's original control-flow labels.
 $lyricsPath = Get-RequiredFile 'smali_classes2\com\apple\android\music\player\fragment\PlayerLyricsViewFragment.smali'
@@ -145,4 +169,3 @@ $state = Replace-Once $state $stateAnchor $stateHook 'player/state'
 Write-Utf8 $statePath $state
 
 Write-Host 'Smali 补丁已应用，并通过全部唯一锚点校验。'
-

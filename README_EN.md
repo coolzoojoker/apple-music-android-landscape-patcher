@@ -124,7 +124,7 @@ SHA-256 is a file-integrity fingerprint, not a password, activation code, or acc
 - **Lyrics and queue:** retains the native player's data and button state in a landscape split layout.
 - **Music videos:** attempts to reuse the native video output across player modes instead of replacing it with static artwork.
 - **Touch and mouse input:** supports player buttons and a full-page swipe-down gesture; car profiles hide supported system bars.
-- **Local signing:** the signing key and generated APK remain on your computer.
+- **Local signing:** the signing key and generated APK remain on your computer; outputs include verified v1, v2, and v3 signatures plus alignment checks.
 
 ## Screenshots
 

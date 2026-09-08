@@ -13,8 +13,8 @@
 7. **编译原创控制器**：`src/tv` 和 `src/car` 下的 Java 源码由 `javac` 编译，再由 Android `d8` 转换为新的 DEX。
 8. **注入新 DEX**：新 DEX 作为下一个 `classesN.dex` 写入，不覆盖原版已有 DEX。
 9. **车机清单处理**：车机配置会添加一个不导出的初始化 Provider，用于沉浸式系统栏处理；TV 配置不加。
-10. **重打包与对齐**：Apktool 重建 APK，`zipalign` 做 4 字节对齐。
-11. **本地签名**：首次运行在 `.local/signing` 生成每位使用者自己的 RSA 密钥，`apksigner` 签名并立刻验证。
+10. **重打包与对齐**：Apktool 重建 APK，`zipalign` 同时校验 4 字节 ZIP 对齐与 16 KiB 原生库页面对齐。
+11. **本地签名**：首次运行在 `.local/signing` 生成每位使用者自己的 RSA 密钥，`apksigner` 明确生成并验证 v1、v2、v3 三种签名，以兼容不同厂商的安装器。
 12. **输出哈希**：最终 APK 写入 `dist`，同时显示 SHA-256，便于记录和比对。
 
 工具、版本、下载地址及哈希固定在 `tools.lock.json`。实际命令位于 `scripts/build.ps1`；脚本运行时会打印非敏感命令，签名密码显示为 `<redacted>`。
