@@ -163,7 +163,9 @@ $env:JAVA_HOME = $java.Directory.Parent.FullName
 $env:PATH = $java.Directory.FullName + [IO.Path]::PathSeparator + $env:PATH
 
 New-Item -ItemType Directory -Path $OutputDirectory -Force | Out-Null
-$workRoot = Join-Path (Join-Path $root 'build') ([guid]::NewGuid().ToString('N'))
+$workBase = Join-Path ([IO.Path]::GetTempPath()) 'amlp'
+New-Item -ItemType Directory -Path $workBase -Force | Out-Null
+$workRoot = Join-Path $workBase ([guid]::NewGuid().ToString('N'))
 New-Item -ItemType Directory -Path $workRoot -Force | Out-Null
 Write-Host "工作目录：$workRoot"
 
@@ -251,7 +253,7 @@ try {
     foreach ($scheme in @('v1','v2','v3')) {
         $expected = "Verified using $scheme scheme (JAR signing): true"
         if ($scheme -ne 'v1') { $expected = "Verified using $scheme scheme (APK Signature Scheme $scheme): true" }
-        if (-not $signatureText.Contains($expected, [StringComparison]::Ordinal)) {
+        if ($signatureText.IndexOf($expected, [StringComparison]::Ordinal) -lt 0) {
             throw "APK 缺少必需的 $scheme 签名。"
         }
     }
@@ -272,10 +274,16 @@ try {
         Write-Host "保留工作目录：$workRoot"
     } elseif (Test-Path -LiteralPath $workRoot) {
         $resolved = [IO.Path]::GetFullPath($workRoot)
-        $allowed = [IO.Path]::GetFullPath((Join-Path $root 'build')) + [IO.Path]::DirectorySeparatorChar
+        $allowed = [IO.Path]::GetFullPath($workBase) + [IO.Path]::DirectorySeparatorChar
         if (-not $resolved.StartsWith($allowed, [StringComparison]::OrdinalIgnoreCase)) {
-            throw "拒绝清理 build 目录之外的路径：$resolved"
+            Write-Warning "拒绝清理临时构建根目录之外的路径：$resolved"
+        } else {
+            try {
+                Remove-Item -LiteralPath $resolved -Recurse -Force -ErrorAction Stop
+            } catch {
+                Write-Warning "临时目录清理失败，但不会影响已经生成并通过校验的 APK：$resolved"
+                Write-Warning $_.Exception.Message
+            }
         }
-        Remove-Item -LiteralPath $resolved -Recurse -Force
     }
 }

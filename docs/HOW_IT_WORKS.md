@@ -8,7 +8,7 @@
 2. **解开 APKM**：APKM 本质上是包含 `base.apk`、CPU split 和 DPI split 的 ZIP 容器。
 3. **选择配置**：根据 TV / 车机和 ARMv7 / ARM64，只挑需要的 CPU 与密度模块。
 4. **合并 Split APK**：APKEditor 把 base 和选定 split 合并成单 APK，方便不支持 APKM 的电视和车机安装。
-5. **反汇编代码**：Apktool 以 `-r` 保留原始资源表，只把 DEX 反汇编成 Smali，减少资源重编译差异。
+5. **反汇编代码**：补丁器在系统临时目录的短路径中工作；Apktool 以 `-r` 保留原始资源表，只把 DEX 反汇编成 Smali，避免解压目录层级触发 Windows 长路径问题。
 6. **应用 Smali 补丁**：`patch-smali.ps1` 按“类名 + 原始锚点 + 唯一匹配次数”修改入口；匹配次数不符时停止构建。
 7. **编译原创控制器**：`src/tv` 和 `src/car` 下的 Java 源码由 `javac` 编译，再由 Android `d8` 转换为新的 DEX。
 8. **注入新 DEX**：新 DEX 作为下一个 `classesN.dex` 写入，不覆盖原版已有 DEX。
