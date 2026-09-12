@@ -77,6 +77,8 @@ $adb = Get-ChildItem ".\.local\toolchain\platform-tools" -Filter adb.exe -Recurs
 
 如果电视提示签名冲突，需先确认账号与离线下载可以恢复，再手动卸载 Apple 官方版；补丁器不会自动卸载或清除数据。
 
+如果 ADB 返回 `Failure [-124: ... resources.arsc ... uncompressed ...]`，说明成品由旧版补丁器或不兼容的 ZIP 实现生成。请删除旧补丁器和旧成品，下载 **0.2.4-preview 或更高版本**后重新构建；新版会强制以未压缩方式写入 `resources.arsc`，并在完成前校验其压缩方法和对齐状态。
+
 车机可使用厂商允许的 U 盘、文件管理器或调试安装入口。本项目不会提供或绕过工程密码、安全签名、驾驶限制。驾驶时不要操作播放器。
 
 ## SHA-256 是什么

@@ -109,6 +109,82 @@ function Add-DexToApk([string]$Apk, [string]$Dex) {
     Write-Host "已注入 $entryName，并重建一致的 ZIP 目录"
 }
 
+function Get-ZipEntryCompressionMethod([string]$Archive, [string]$EntryName) {
+    # ZipArchive does not expose the ZIP compression method. Comparing the
+    # compressed and uncompressed sizes is not sufficient because a Deflate
+    # stream can occasionally have the same size as its input. Read the
+    # central directory directly so the Android R+ resources.arsc rule can be
+    # checked reliably on both Windows PowerShell 5.1 and PowerShell 7.
+    $stream = [IO.File]::OpenRead($Archive)
+    $reader = [IO.BinaryReader]::new($stream, [Text.Encoding]::UTF8, $false)
+    try {
+        $tailLength = [int][Math]::Min(65557, $stream.Length)
+        [void]$stream.Seek(-$tailLength, [IO.SeekOrigin]::End)
+        $tail = $reader.ReadBytes($tailLength)
+        $eocd = -1
+        for ($index = $tail.Length - 22; $index -ge 0; $index--) {
+            if ($tail[$index] -eq 0x50 -and $tail[$index + 1] -eq 0x4B -and
+                $tail[$index + 2] -eq 0x05 -and $tail[$index + 3] -eq 0x06) {
+                $eocd = $index
+                break
+            }
+        }
+        if ($eocd -lt 0) { throw "ZIP 中找不到中央目录：$Archive" }
+
+        $entryCount = [BitConverter]::ToUInt16($tail, $eocd + 10)
+        $centralOffset = [BitConverter]::ToUInt32($tail, $eocd + 16)
+        [void]$stream.Seek($centralOffset, [IO.SeekOrigin]::Begin)
+        for ($entryIndex = 0; $entryIndex -lt $entryCount; $entryIndex++) {
+            if ($reader.ReadUInt32() -ne 0x02014B50) {
+                throw "ZIP 中央目录损坏：$Archive"
+            }
+            [void]$reader.ReadUInt16() # version made by
+            [void]$reader.ReadUInt16() # version needed
+            $flags = $reader.ReadUInt16()
+            $method = $reader.ReadUInt16()
+            [void]$stream.Seek(16, [IO.SeekOrigin]::Current)
+            $nameLength = $reader.ReadUInt16()
+            $extraLength = $reader.ReadUInt16()
+            $commentLength = $reader.ReadUInt16()
+            [void]$stream.Seek(12, [IO.SeekOrigin]::Current)
+            $nameBytes = $reader.ReadBytes($nameLength)
+            $encoding = if (($flags -band 0x0800) -ne 0) {
+                [Text.Encoding]::UTF8
+            } else {
+                [Text.Encoding]::ASCII
+            }
+            $name = $encoding.GetString($nameBytes)
+            if ($name -eq $EntryName) { return [int]$method }
+            [void]$stream.Seek($extraLength + $commentLength, [IO.SeekOrigin]::Current)
+        }
+        throw "ZIP 中缺少入口：$EntryName"
+    } finally {
+        $reader.Dispose()
+    }
+}
+
+function Store-ResourceTable([string]$Apk, [string]$Directory, [string]$Jar) {
+    # CompressionLevel.NoCompression is not portable here: Windows PowerShell
+    # 5.1/.NET Framework can still emit a Deflate (method 8) entry at level 0,
+    # while PowerShell 7 emits a true STORE (method 0) entry. JDK jar -0 is
+    # deterministic across both shells and replaces resources.arsc in-place.
+    New-Item -ItemType Directory -Path $Directory -Force | Out-Null
+    Push-Location $Directory
+    try {
+        Run $Jar @('--extract', '--file', $Apk, 'resources.arsc')
+        if (-not (Test-Path -LiteralPath 'resources.arsc' -PathType Leaf)) {
+            throw 'APK 中缺少 resources.arsc。'
+        }
+        Run $Jar @('--update', '--file', $Apk, '--no-compress', 'resources.arsc')
+    } finally {
+        Pop-Location
+    }
+    if ((Get-ZipEntryCompressionMethod $Apk 'resources.arsc') -ne 0) {
+        throw 'resources.arsc 仍被压缩；Android 11 及以上将拒绝安装此 APK。'
+    }
+    Write-Host 'resources.arsc 已按 STORE（未压缩）方式写入。'
+}
+
 function Add-CarProvider([string]$InputApk, [string]$OutputApk, [string]$DecodeDirectory,
                          [string]$Java, [string]$ApkEditor) {
     Run $Java @('-jar', $ApkEditor, 'd', '-i', $InputApk, '-o', $DecodeDirectory, '-dex', '-t', 'xml', '-f')
@@ -217,6 +293,8 @@ try {
         $unsigned = $carUnsigned
     }
 
+    Store-ResourceTable $unsigned (Join-Path $workRoot 'stored-resource-table') $jar.FullName
+
     $signingDirectory = Join-Path $local 'signing'
     New-Item -ItemType Directory -Path $signingDirectory -Force | Out-Null
     $keystore = Join-Path $signingDirectory 'user-signing.jks'
@@ -256,6 +334,9 @@ try {
         if ($signatureText.IndexOf($expected, [StringComparison]::Ordinal) -lt 0) {
             throw "APK 缺少必需的 $scheme 签名。"
         }
+    }
+    if ((Get-ZipEntryCompressionMethod $output 'resources.arsc') -ne 0) {
+        throw '签名后的 APK 中 resources.arsc 不是未压缩条目。'
     }
     Run $zipalign.FullName @('-c','-P','16','4',$output)
     Write-Host ('> ' + $aapt2.FullName + ' dump badging ' + $output)

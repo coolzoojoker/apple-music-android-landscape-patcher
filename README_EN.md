@@ -93,6 +93,8 @@ $adb = Get-ChildItem ".\.local\toolchain\platform-tools" -Filter adb.exe -Recurs
 
 The build wizard can also perform these steps. Enable developer options and network/ADB debugging on the TV, keep the computer and TV on the same network, and approve the first debugging request shown on the TV.
 
+If ADB reports `Failure [-124: ... resources.arsc ... uncompressed ...]`, the APK was produced by an older patcher or an incompatible ZIP implementation. Delete the old patcher and generated APK, download **0.2.4-preview or newer**, and rebuild. Current releases force `resources.arsc` to use the ZIP STORE method and verify both its compression method and alignment before completing.
+
 ### In-vehicle installation
 
 Copy the appropriate car APK to a USB drive or another location the system can access, then use the manufacturer's supported file manager or application installer. This project does not provide or bypass engineering passwords, system signatures, installation restrictions, or driving-safety controls. Do not install, debug, or operate the player while driving.
